@@ -1,0 +1,24 @@
+body {
+    background-color: grey;
+    font-family: 'Pirata One', cursive;
+}
+h1 {
+    color: rgb(3, 129, 123);
+}
+.centered {
+    margin: 0 auto;
+    text-align: center;
+}
+.gridcontainer {
+    justify-content: center;
+    display: grid;
+    color: white ;
+    grid-template-columns: repeat(3, 5rem);
+    grid-template-rows: repeat(3, 5rem);
+    align-items: center;
+    column-gap: 2rem;
+    row-gap: 2rem;
+}
+div i:hover {
+    color: #3e4377;
+}
