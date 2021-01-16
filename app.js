@@ -25,14 +25,16 @@ const score = () => {
 
 const counter = score();
 
+const playerName = 'echo';
+const icon = 'echo.png';
 
-const createUser = ({playerName, icon}) => ({
+const createPlayer = ({ playerName, icon }) => ({
     playerName,
     icon,
-
     setPlayerName (playerName) {
         this.playerName = playerName;
         return this;
     }
 });
 
+createPlayer({playerName: 'Jim', icon: 'ninja.jpg'})
