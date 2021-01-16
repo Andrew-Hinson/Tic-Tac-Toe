@@ -5,20 +5,27 @@ body {
 h1 {
     color: rgb(3, 129, 123);
 }
+div i:hover {
+    color: #3e4377;
+}
 .centered {
-    margin: 0 auto;
     text-align: center;
+    align-items: center;
 }
 .gridcontainer {
-    justify-content: center;
+    margin: 0 auto;
+    border: 2px solid white;
+    width: 304px;
+    justify-items: stretch ;
     display: grid;
+    background-color: green ;
     color: white ;
     grid-template-columns: repeat(3, 5rem);
     grid-template-rows: repeat(3, 5rem);
-    align-items: center;
     column-gap: 2rem;
     row-gap: 2rem;
 }
-div i:hover {
-    color: #3e4377;
+.markplacement {
+    background-color: red ;
+    padding: 20px;
 }
