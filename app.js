@@ -38,3 +38,33 @@ const createPlayer = ({ playerName, icon }) => ({
 });
 
 createPlayer({playerName: 'Jim', icon: 'ninja.jpg'})
+
+const placeMarker = ({}) => ({
+    
+})
+let turn = false;
+
+const gameClick = document.querySelector('#gamearea').addEventListener('click', (e) => {
+    let target = e.target;
+    
+    console.log(e)
+    if(target.className == 'markplacement'){
+        let y = target.id
+        let divTarget = document.querySelector(`#${y}`);
+        if(turn == false){
+            let icon = document.createElement('i');
+            icon.classList.add('fas', 'fa-skull-crossbones', 'fa-3x');
+            icon.dataset.id = 'x';
+            divTarget.appendChild(icon);
+            turn = true;
+        } 
+        else if (turn == true){
+            let icon = document.createElement('i')
+            icon.classList.add('fas', 'fa-user-ninja', 'fa-3x')
+            icon.dataset.id = 'o'
+            divTarget.appendChild(icon);
+            turn = false;
+        }
+    }
+})
+    

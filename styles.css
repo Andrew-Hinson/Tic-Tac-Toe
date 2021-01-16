@@ -29,3 +29,6 @@ div i:hover {
     background-color: red ;
     padding: 20px;
 }
+.markplacement:hover {
+    background-color: teal;
+}
