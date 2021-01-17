@@ -9,12 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="titlearea" class="container">
+    <div id="titlearea" class="centered">
         <h1>Tic-Tac-Toe</h1>
+        <h2><span>Player 1,</span> Choose your side!</h2>
+        <div id="buttons">
+            <button id="pirate" class="button"><label for="pirates">Pirates: </label> <i  class="fas fa-skull-crossbones fa-3x"></i></button>
+            <button id="ninja" class="button"><label for="ninjas">Ninjas: </label> <i  class="fas fa-user-ninja fa-3x"></i></button>
+        </div>
     </div>
-    <h2>Choose your side!</h2>
-    <h3> <label for="pirates">Pirates: </label> <i class="fas fa-skull-crossbones fa-2x"></i></h3>
-    <h3> <label for="ninjas">Ninjas: </label> <i class="fas fa-user-ninja fa-2x"></i></h3>
     <div id="gameParent" class="centered">
         <div id="gamearea" class="gridcontainer">
             <div id="s0" data-id="c" class="markplacement"></div>
@@ -28,7 +30,11 @@
             <div id="s8" data-id="c" class="markplacement"></div>
         </div>
     </div>
-    <i class="fas fa-skull-crossbones fa-2x"></i>
+    <div id="footer" class="centered">
+        <p id="player1"><label for="player1">Player 1:</label><span id="p1Display"></span></p>
+        <p id="player2"><label for="player2">Player 2:</label><span id="p1Display"></span></p>
+        <button>RESET</button>
+    </div>
 
     <script src="app.js"></script>
 </body>

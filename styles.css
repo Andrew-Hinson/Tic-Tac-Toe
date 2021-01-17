@@ -8,9 +8,14 @@ h1 {
 div i:hover {
     color: #3e4377;
 }
+button > * {
+    padding: 0.4rem;
+    pointer-events: none;
+  }
 .centered {
     text-align: center;
     align-items: center;
+    padding: 1rem;
 }
 .gridcontainer {
     margin: 0 auto;
@@ -31,4 +36,8 @@ div i:hover {
 }
 .markplacement:hover {
     background-color: teal;
+}
+#footer {
+    justify-content: center;
+    display: flex; 
 }
