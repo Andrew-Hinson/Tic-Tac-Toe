@@ -13,6 +13,7 @@ const factionPicker = document.querySelector('#titlearea').addEventListener('cli
         Gameboard.target = target.id;
         Gameboard.player2 = createPlayer(`${target.id}`,`${target.id}`,`${target.value}`, Gameboard.turn, [])
         e.target.disabled = true;
+        Gameboard.gamestart = true;
     }
 })
 
@@ -22,6 +23,7 @@ const Gameboard = {
     target: '',
     turn: true,
     count: 0,
+    gamestart: false,
     gamecontents: [],
     winConditions: {
         win1: [0,1,2],
@@ -47,29 +49,39 @@ const createPlayer = (player, avatar, value, turn, markers) => {
 
 
 const gameLogic = (() => {
+    //creates markers, doesnt fire till Gameboard.gamestart == true, pushes values to objects
     const markerPlacement = document.querySelector('.gridcontainer').addEventListener('click', (e) => {
         let target = e.target
         console.log(e)
         console.log(target)
-        if(target.className == 'markplacement'){
+        if(target.className == 'markplacement' && target.childNodes.length == 0 && Gameboard.gamestart == true){
             let y = target.id
             let divToAppend = document.querySelector(`#${y}`);
-            console.log(y);
+            let condition = parseInt(target.dataset.id)
             placement();
             let newMarker = document.createElement('i');
             if(useMarker == 'o'){
                 newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x');
+                if(Gameboard.player1.avatar == 'ninja'){
+                    Gameboard.player1.markers.push(condition);
+                } else {
+                    Gameboard.player1.markers.push(condition);
+                }
             }
             if(useMarker == 'x'){
-            newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
+                newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
+                if(Gameboard.player2.avatar == 'ninja'){
+                    Gameboard.player2.markers.push(condition);
+                } else {
+                    Gameboard.player2.markers.push(condition);
+                }
             }
-            // it should be the same as newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
             divToAppend.appendChild(newMarker)
         }
     });
     
     let useMarker;
-    
+    //alternates turns for players, updates useMarker
     let placement = (player) => {
         if(Gameboard.player1.turn == true){
             if(Gameboard.player1.avatar == 'ninja'){
