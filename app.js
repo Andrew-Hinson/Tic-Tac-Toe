@@ -44,42 +44,55 @@ const createPlayer = (player, avatar, value, turn, markers) => {
     return {player, avatar, value, turn, markers}
 };
 
+
+
 const gameLogic = (() => {
+    const markerPlacement = document.querySelector('.gridcontainer').addEventListener('click', (e) => {
+        let target = e.target
+        console.log(e)
+        console.log(target)
+        if(target.className == 'markplacement'){
+            let y = target.id
+            let divToAppend = document.querySelector(`#${y}`);
+            console.log(y);
+            placement();
+            let newMarker = document.createElement('i');
+            if(useMarker == 'o'){
+                newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x');
+            }
+            if(useMarker == 'x'){
+            newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
+            }
+            // it should be the same as newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
+            divToAppend.appendChild(newMarker)
+        }
+    });
+    
     let useMarker;
-    let pirateIcon = ('fas', 'fa-skull-crossbones', 'fa-3x');
-    let ninjaIcon = ('fas', 'fa-user-ninja', 'fa-3x');
+    
     let placement = (player) => {
         if(Gameboard.player1.turn == true){
             if(Gameboard.player1.avatar == 'ninja'){
-                useMarker = ninjaIcon;
+                useMarker = 'o';
             } else {
-                useMarker = pirateIcon;
+                useMarker = 'x';
             }
             Gameboard.player1.turn = false;
             Gameboard.player2.turn = true;
         } else if(Gameboard.player2.turn == true){
             if(Gameboard.player2.avatar == 'ninja'){
-                useMarker = ninjaIcon;
+                useMarker = 'o';
             } else {
-                useMarker = pirateIcon;
+                useMarker = 'x';
             }
             Gameboard.player2.turn = false;
             Gameboard.player1.turn = true;
         }
-    }
-    return {placement, useMarker,}
+    };
+    return {useMarker,}
 })()
 
-const markerPlacement = document.querySelector('.gridcontainer').addEventListener('click', (e) => {
-    let target = e.target
-    console.log(e)
-    console.log(target)
-    if(target.className == 'markplacement'){
-        let y = target.id
-        console.log(y)
-        
-    }
-})
+
 
 //"fas fa-skull-crossbones fa-3x"
 //"fas fa-user-ninja fa-3x"
