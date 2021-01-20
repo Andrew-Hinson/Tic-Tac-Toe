@@ -19,7 +19,7 @@ const factionPicker = document.querySelector('#titlearea').addEventListener('cli
         Gameboard.gamestart = true;
         updateTitle.innerText = 'Player 1, Your move!'
     }   
-})
+});
 
 const Gameboard = {
     player1: {},
@@ -28,7 +28,9 @@ const Gameboard = {
     turn: true,
     count: 0,
     gamestart: false,
+    maxplays: 0,
     gamecontents: [],  
+    wins: [0,1,2,3,4,5,6,7,8,0,3,6,1,4,7,2,5,8,0,4,8,3,4,6]
 }
 //factory
 const createPlayer = (player, avatar, value, turn, markers) => {
@@ -108,99 +110,50 @@ const gameLogic = (() => {
 
 
 
-const winConditions = [0,1,2,3,4,5,6,7,8,0,3,6,1,4,7,2,5,8,0,4,8,3,4,6]
+
 
 const isThereAWinnerYet = () => {
+    let gameWinVals = Gameboard.wins.map(i => i) //to keep wins permanant through each iteration
+    const winConditions = gameWinVals
+    let playerArr = [7,6,8]; //a winning condition to compare playerArr to
+    let testingArr = [];
+    let evaledArr = [];
     
-    let player1Arr = [2,1,0,7,8]; //a winning condition to compare playerArr to
-    let testingArr = [1,0,2];
-    let evaledArr = []
+    
+
     let myFilter = (pArr, tester) => {  
-    evaledArr = pArr.filter(num => tester.includes(num) === true)
-    return evaledArr;  //"it goes in here"
-    }
-    myFilter(player1Arr, testingArr)
+        evaledArr = pArr.filter(num => tester.includes(num) === true)
+        return evaledArr}; 
 
-    if(evaledArr.length === 3 && testingArr === 3){
-        if(testingArr.sort().join(',') === evaledArr.sort().join(',')){
-            console.log('player has won');
-        } else {
-            console.log('nothin yet')
+    
+        
+
+
+    if(playerArr.length >= 3){
+        while(winConditions.length > 1){
+            testingArr = []
+            testingArr.push(winConditions.splice(0,3))
+            myFilter(playerArr, testingArr)
+            if(testingArr.sort().join(',') === evaledArr.sort().join(',')){
+                console.log('player has won');
+            } else {
+                console.log(testingArr)
+            }
         }
-    }
-    return {evaledArr, testingArr, player1Arr}
-   
+    };
+
+     //discards numbers that are not part of a winning combo
+    
+        
+
+    return {evaledArr, testingArr, playerArr}
 }
 
+// let playerArr = [7,6,8]; //a winning condition to compare playerArr to
+// let testingArr = [6,7,8];
+// let evaledArr = [];
 
+// let myFilter = (pArr, tester) => {  
+// evaledArr = pArr.filter(num => tester.includes(num) === true)
+// return evaledArr}; 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//map over win condition, use includes to see if player array contains number - map inside of map
-//put number in new array
-//if number is not in win condition, do not put number in new array
-//.sort().join(',') win condition array and new array
-//compare arrays
-
-
-
-//sort win condition individually
-//sort player array individually, compare at each click
-//if longer than 3, map over and compare to win conditions again
-
-
-// if(array1.sort().join(',')=== array2.markers.sort().join(',')){
-//     alert('same members');
-// }
-// else alert('not a match');
-//function arrayEquals(a, b) {
-//     return Array.isArray(a) &&
-//     Array.isArray(b) &&
-//     a.length === b.length &&
-//     a.every((val, index) => val === b[index]);
-// }
-
-// let wholeArr = [0,1,2,3,4,5,6,7,8,0,3,6,1,4,7,2,5,8,0,4,8,3,4,6]
-// let mytest = (arr) => {
-//      //take values from this -> squirt into testArr,compare with player arr
-//     let testArr = []; //a winning condition to compare playerArr to
-//     let playerArr = [1,0,2]; //the players current moves
-
-//     //gets a winning condition from main array, pushes to testArr and erases whatever is in testArr
-//     testArr.push(arr.splice(0,3))
-
-//     //tests whether or not both arrays are equal
-//     if(testArr.sort().join(',') === playerArr.sort().join(',')){
-//             console.log('player has won');
-//         }   
-//             else {
-//                 console.log('nothin yet')
-//             }
-//     return {testArr, playerArr}
-// }
-//                 //
-let myFilter = (pArr, tester) => {          //"if I don't find it"
-    let passesFiltertest = pArr.filter(num => tester.includes(num) === true);
-    return passesFiltertest;  //"it goes in here"
-}
-let player1Arr = [2,1,0,7,8]; //a winning condition to compare playerArr to
-let testingArr = [1,0,2];
-
-// const checkit = (arr, checkArr) => {
-//     const works = arr.map((i) => {
-//         checkArr.includes(i)
-//     })
-//     return works
-// }
