@@ -30,7 +30,7 @@ const Gameboard = {
     gamestart: false,
     maxplays: 0,
     gamecontents: [],  
-    wins: [0,1,2,3,4,5,6,7,8,0,3,6,1,4,7,2,5,8,0,4,8,3,4,6]
+    wins: [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[3,4,6]]
 }
 //factory
 const createPlayer = (player, avatar, value, turn, markers) => {
@@ -112,48 +112,49 @@ const gameLogic = (() => {
 
 
 
-const isThereAWinnerYet = () => {
-    let gameWinVals = Gameboard.wins.map(i => i) //to keep wins permanant through each iteration
-    const winConditions = gameWinVals
-    let playerArr = [7,6,8]; //a winning condition to compare playerArr to
-    let testingArr = [];
+const evaluateScore = () => {
+    let updateTitle = document.querySelector('#h2title')
+    let gameWinVals = Gameboard.wins.map(miniArr => miniArr) //to keep wins permanant through each iteration
+    let winConditions = gameWinVals
+    let playerArr = [7,0,4,1]; //a winning condition to compare playerArr to
     let evaledArr = [];
-    
-    
+    let testArray = [0,2,1];
 
+
+    //determins if the win exists in the players array
     let myFilter = (pArr, tester) => {  
-        evaledArr = pArr.filter(num => tester.includes(num) === true)
-        return evaledArr}; 
-
-    
-        
-
-
-    if(playerArr.length >= 3){
-        while(winConditions.length > 1){
-            testingArr = []
-            testingArr.push(winConditions.splice(0,3))
-            myFilter(playerArr, testingArr)
-            if(testingArr.sort().join(',') === evaledArr.sort().join(',')){
-                console.log('player has won');
-            } else {
-                console.log(testingArr)
-            }
+            evaledArr = pArr.filter(num => tester.includes(num) === true)
+        if (evaledArr.length === 3){
+            updateTitle.innerText = 'Player has won!'
+        } else {
+            console.log('not a winning combo')
         }
-    };
+    }
+    let findWin = () => {
+        for(let i = 0; i<= winConditions.length; i++){
+            myFilter(playerArr, winConditions[i])
+        }
+    }
+    findWin()
+}   
 
-     //discards numbers that are not part of a winning combo
+
+
     
-        
 
-    return {evaledArr, testingArr, playerArr}
-}
-
-// let playerArr = [7,6,8]; //a winning condition to compare playerArr to
-// let testingArr = [6,7,8];
-// let evaledArr = [];
-
-// let myFilter = (pArr, tester) => {  
-// evaledArr = pArr.filter(num => tester.includes(num) === true)
-// return evaledArr}; 
-
+    
+// if(playerArr.length >= 3){
+//     myFilter(playerArr, winConditions.map((miniArray) => miniArray))
+//     while(winConditions.length > 1){
+//         winConditions.map((miniArray) => {if(miniArray == playerArr){
+//             console.log('Player has won')
+//         } else {
+//             console.log('no winning condition found')
+//         }})
+//         if(testingArr.sort().join(',') == evaledArr.sort().join(',')){
+//             console.log('player has won');
+//         } else {
+//             console.log(testingArr)
+//         }
+//     }
+// };
