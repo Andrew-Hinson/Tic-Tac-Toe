@@ -57,32 +57,33 @@ const gameLogic = (() => {
             let newMarker = document.createElement('i');
 
             placement(); //figures out whose turn it is
-            
+            /////////////////////////////////////////////// Decides which icon to add to the useMarker variable to then add to divToAppend
             if(useMarker == 'o'){
-                newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x');
+                
                 if(Gameboard.player1.avatar == 'ninja'){
+                    newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x');
                     Gameboard.player1.markers.push(condition);
                 } else if(Gameboard.player1.avatar == 'pirate'){
+                    newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
                     Gameboard.player1.markers.push(condition);
                 }
                 evaluateScore(Gameboard.player1.markers) //possibly place evaluateScore() here
-                if(Gameboard.gamewon == true){
-                    updateTitle.innerText = 'Player 1 Wins!'
-                }
-            }
-            if(useMarker == 'x'){
-                newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
+                
+            } else if(useMarker == 'x'){
+                
                 if(Gameboard.player2.avatar == 'ninja'){
+                    newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x');
                     Gameboard.player2.markers.push(condition);
                 } else if(Gameboard.player2.avatar == 'pirate'){
+                    newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
                     Gameboard.player2.markers.push(condition);
                 }
                 evaluateScore(Gameboard.player2.markers)//possibly place evaluateScore() here
-                if(Gameboard.gamewon == true){
-                    updateTitle.innerText = 'Player 2 Wins!'
-                }
+            
             }
+            //////////////////////////////////////////////
             divToAppend.appendChild(newMarker)
+            
         }
         if(target.id == 'reset'){
             updateTitle.innerText = 'Player 1, Choose your side!'
@@ -112,7 +113,6 @@ const gameLogic = (() => {
             } else if(Gameboard.player1.avatar == 'pirate'){
                 useMarker = 'x';
             }
-            updateTitle.innerText = 'Player 2, Your move!'
             Gameboard.player1.turn = false;
             Gameboard.player2.turn = true;
         } else if(Gameboard.player2.turn == true){
@@ -121,7 +121,6 @@ const gameLogic = (() => {
             } else if(Gameboard.player2.avatar == 'pirate'){
                 useMarker = 'x';
             }
-            updateTitle.innerText = 'Player 1, Your move!'
             Gameboard.player2.turn = false;
             Gameboard.player1.turn = true;
         }
