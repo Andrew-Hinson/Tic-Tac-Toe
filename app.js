@@ -29,7 +29,7 @@ const Gameboard = {
     count: 0,
     gamestart: false,
     maxplays: 0,
-    gamecontents: [],  
+    gamewon: false, 
     wins: [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[3,4,6]]
 }
 //factory
@@ -66,7 +66,7 @@ const gameLogic = (() => {
                 } else if(Gameboard.player1.avatar == 'pirate'){
                     Gameboard.player1.markers.push(condition);
                 }
-                
+                //possibly place evaluateScore() here
             }
             if(useMarker == 'x'){
                 newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
@@ -75,7 +75,7 @@ const gameLogic = (() => {
                 } else {
                     Gameboard.player2.markers.push(condition);
                 }
-                
+                //possibly place evaluateScore() here
             }
             divToAppend.appendChild(newMarker)
         }
@@ -112,31 +112,31 @@ const gameLogic = (() => {
 
 
 
-const evaluateScore = () => {
+const evaluateScore = (playerArr) => {
     let updateTitle = document.querySelector('#h2title')
     let gameWinVals = Gameboard.wins.map(miniArr => miniArr) //to keep wins permanant through each iteration
     let winConditions = gameWinVals
-    let playerArr = [7,0,4,1]; //a winning condition to compare playerArr to
     let evaledArr = [];
-    let testArray = [0,2,1];
-
+    let testArray = [];
+    playerArr = []; //needs to grab value of the array that is passed to it
 
     //determins if the win exists in the players array
     let myFilter = (pArr, tester) => {  
             evaledArr = pArr.filter(num => tester.includes(num) === true)
         if (evaledArr.length === 3){
             updateTitle.innerText = 'Player has won!'
+            Gameboard.gamewon = true;
         } else {
             console.log('not a winning combo')
         }
     }
     let findWin = () => {
-        for(let i = 0; i<= winConditions.length; i++){
+        for(let i = 0; i <= 7; i++){
             myFilter(playerArr, winConditions[i])
         }
     }
     findWin()
-}   
+}
 
 
 
