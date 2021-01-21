@@ -1,6 +1,5 @@
 //Creates the players and stores the value inside of Gameboard
 const factionPicker = document.querySelector('#titlearea').addEventListener('click', (e) => {
-    let updateSpan = document.querySelector('#h2span')
     let updateTitle = document.querySelector('#h2title')
     let target = e.target
     console.log(e)
@@ -11,7 +10,7 @@ const factionPicker = document.querySelector('#titlearea').addEventListener('cli
         Gameboard.count ++;
         Gameboard.turn = false;
         e.target.disabled = true;
-        updateSpan.innerText = 'Player 2,'
+        updateTitle.innerText = 'Player 2, Choose your side!'
     } else if(target.className == 'playerTeam' && Gameboard.count == 1){
         Gameboard.target = target.id;
         Gameboard.player2 = createPlayer(`${target.id}`,`${target.id}`,`${target.value}`, Gameboard.turn, [])
@@ -30,7 +29,7 @@ const Gameboard = {
     gamestart: false,
     maxplays: 0,
     gamewon: false, 
-    wins: [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[3,4,6]]
+    wins: [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[3,4,6],[2,4,6]]
 }
 //factory
 const createPlayer = (player, avatar, value, turn, markers) => {
@@ -46,12 +45,12 @@ const createPlayer = (player, avatar, value, turn, markers) => {
 
 const gameLogic = (() => {
     //creates markers, doesnt fire till Gameboard.gamestart == true, pushes values to objects
-    const markerPlacement = document.querySelector('.gridcontainer').addEventListener('click', (e) => {
-        
+    const markerPlacement = document.querySelector('#gameParent').addEventListener('click', (e) => {
         let target = e.target
         console.log(e)
-        console.log(target)
+        let updateTitle = document.querySelector('#h2title')
         if(target.className == 'markplacement' && target.childNodes.length == 0 && Gameboard.gamestart == true){
+            
             let y = target.id
             let divToAppend = document.querySelector(`#${y}`);
             let condition = parseInt(target.dataset.id)
@@ -66,29 +65,51 @@ const gameLogic = (() => {
                 } else if(Gameboard.player1.avatar == 'pirate'){
                     Gameboard.player1.markers.push(condition);
                 }
-                //possibly place evaluateScore() here
+                evaluateScore(Gameboard.player1.markers) //possibly place evaluateScore() here
+                if(Gameboard.gamewon == true){
+                    updateTitle.innerText = 'Player 1 Wins!'
+                }
             }
             if(useMarker == 'x'){
                 newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
                 if(Gameboard.player2.avatar == 'ninja'){
                     Gameboard.player2.markers.push(condition);
-                } else {
+                } else if(Gameboard.player2.avatar == 'pirate'){
                     Gameboard.player2.markers.push(condition);
                 }
-                //possibly place evaluateScore() here
+                evaluateScore(Gameboard.player2.markers)//possibly place evaluateScore() here
+                if(Gameboard.gamewon == true){
+                    updateTitle.innerText = 'Player 2 Wins!'
+                }
             }
             divToAppend.appendChild(newMarker)
+        }
+        if(target.id == 'reset'){
+            updateTitle.innerText = 'Player 1, Choose your side!'
+            let buttons = document.querySelectorAll('button')
+            let gridSquares = document.querySelectorAll('.markplacement')
+            buttons.forEach(button => button.disabled = false)
+            gridSquares.forEach((square) => square.innerHTML = '')
+            Gameboard.player1 = {}
+            Gameboard.player2 = {}
+            Gameboard.target = ''
+            Gameboard.turn = true
+            Gameboard.count = 0
+            Gameboard.gamestart =false
+            Gameboard.maxplays = 0
+            Gameboard.gamewon = false
+
         }
     });
    
     let useMarker; //lets placement of markers in gameLogic know which one to place-assigned by placement()
     //placement() alternates turns for players, updates useMarker, checks Gameboard Object player objects for turn == true
-    let placement = (player) => {
+    let placement = () => {
         let updateTitle = document.querySelector('#h2title')
         if(Gameboard.player1.turn == true){
             if(Gameboard.player1.avatar == 'ninja'){
                 useMarker = 'o';
-            } else {
+            } else if(Gameboard.player1.avatar == 'pirate'){
                 useMarker = 'x';
             }
             updateTitle.innerText = 'Player 2, Your move!'
@@ -97,7 +118,7 @@ const gameLogic = (() => {
         } else if(Gameboard.player2.turn == true){
             if(Gameboard.player2.avatar == 'ninja'){
                 useMarker = 'o';
-            } else {
+            } else if(Gameboard.player2.avatar == 'pirate'){
                 useMarker = 'x';
             }
             updateTitle.innerText = 'Player 1, Your move!'
@@ -105,56 +126,28 @@ const gameLogic = (() => {
             Gameboard.player1.turn = true;
         }
     };
+    const evaluateScore = (playerArr) => {
+        
+        let gameWinVals = Gameboard.wins.map(miniArr => miniArr) //to keep wins permanant through each iteration
+        let winConditions = gameWinVals
+        let evaledArr = [];
+        let testArray = [];
+        //determins if the win exists in the players array
+        let myFilter = (pArr, tester) => {  
+                evaledArr = pArr.filter(num => tester.includes(num) === true)
+            if (evaledArr.length === 3){
+                Gameboard.gamewon = true;
+            }
+        }
+        let findWin = () => {
+            for(let i = 0; i <= 8; i++){
+                myFilter(playerArr, winConditions[i])
+            }
+        }
+        findWin()
+    };
+    
+
+
     return {useMarker,}
 })()
-
-
-
-
-
-const evaluateScore = (playerArr) => {
-    let updateTitle = document.querySelector('#h2title')
-    let gameWinVals = Gameboard.wins.map(miniArr => miniArr) //to keep wins permanant through each iteration
-    let winConditions = gameWinVals
-    let evaledArr = [];
-    let testArray = [];
-    playerArr = []; //needs to grab value of the array that is passed to it
-
-    //determins if the win exists in the players array
-    let myFilter = (pArr, tester) => {  
-            evaledArr = pArr.filter(num => tester.includes(num) === true)
-        if (evaledArr.length === 3){
-            updateTitle.innerText = 'Player has won!'
-            Gameboard.gamewon = true;
-        } else {
-            console.log('not a winning combo')
-        }
-    }
-    let findWin = () => {
-        for(let i = 0; i <= 7; i++){
-            myFilter(playerArr, winConditions[i])
-        }
-    }
-    findWin()
-}
-
-
-
-    
-
-    
-// if(playerArr.length >= 3){
-//     myFilter(playerArr, winConditions.map((miniArray) => miniArray))
-//     while(winConditions.length > 1){
-//         winConditions.map((miniArray) => {if(miniArray == playerArr){
-//             console.log('Player has won')
-//         } else {
-//             console.log('no winning condition found')
-//         }})
-//         if(testingArr.sort().join(',') == evaledArr.sort().join(',')){
-//             console.log('player has won');
-//         } else {
-//             console.log(testingArr)
-//         }
-//     }
-// };
