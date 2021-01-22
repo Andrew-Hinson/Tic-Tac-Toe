@@ -16,6 +16,7 @@ const factionPicker = document.querySelector('#titlearea').addEventListener('cli
         Gameboard.player2 = createPlayer(`${target.id}`,`${target.id}`,`${target.value}`, Gameboard.turn, [])
         e.target.disabled = true;
         Gameboard.gamestart = true;
+        Gameboard.turn = true
         updateTitle.innerText = 'Player 1, Your move!'
     }   
 });
@@ -45,86 +46,65 @@ const createPlayer = (player, avatar, value, turn, markers) => {
 
 const gameLogic = (() => {
     //creates markers, doesnt fire till Gameboard.gamestart == true, pushes values to objects
+    let updateTitle = document.querySelector('#h2title')
     const markerPlacement = document.querySelector('#gameParent').addEventListener('click', (e) => {
         let target = e.target
-        console.log(e)
+        let condition = parseInt(target.dataset.id)
+        let newMarker = document.createElement('i');
         let updateTitle = document.querySelector('#h2title')
-        if(target.className == 'markplacement' && target.childNodes.length == 0 && Gameboard.gamestart == true){
-            
-            let y = target.id
-            let divToAppend = document.querySelector(`#${y}`);
-            let condition = parseInt(target.dataset.id)
-            let newMarker = document.createElement('i');
+    
+        let reset = () => {
+                updateTitle.innerText = 'Player 1, Choose your side!'
+                let buttons = document.querySelectorAll('button')
+                let gridSquares = document.querySelectorAll('.markplacement')
+                buttons.forEach(button => button.disabled = false)
+                gridSquares.forEach((square) => square.innerHTML = '')
+                Gameboard.player1 = {}
+                Gameboard.player2 = {}
+                Gameboard.target = ''
+                Gameboard.turn = true
+                Gameboard.count = 0
+                Gameboard.gamestart =false
+                Gameboard.maxplays = 0
+                Gameboard.gamewon = false
+        };
 
-            placement(); //figures out whose turn it is
-            /////////////////////////////////////////////// Decides which icon to add to the useMarker variable to then add to divToAppend
-            if(useMarker == 'o'){
-                
+        let placement = () => {
+            if(Gameboard.turn == true){
+                Gameboard.player1.markers.push(condition);
+                Gameboard.turn = false
+                updateTitle.innerText = 'Player 2, Your move!'
                 if(Gameboard.player1.avatar == 'ninja'){
-                    newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x');
-                    Gameboard.player1.markers.push(condition);
+                    newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x') 
                 } else if(Gameboard.player1.avatar == 'pirate'){
                     newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
-                    Gameboard.player1.markers.push(condition);
                 }
-                evaluateScore(Gameboard.player1.markers) //possibly place evaluateScore() here
-                
-            } else if(useMarker == 'x'){
-                
+            } else if(Gameboard.turn == false){
+                Gameboard.player2.markers.push(condition);
+                Gameboard.turn = true
+                updateTitle.innerText = 'Player 1, Your move!'
                 if(Gameboard.player2.avatar == 'ninja'){
-                    newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x');
-                    Gameboard.player2.markers.push(condition);
+                    newMarker.classList.add('fas', 'fa-user-ninja', 'fa-3x')
                 } else if(Gameboard.player2.avatar == 'pirate'){
                     newMarker.classList.add('fas', 'fa-skull-crossbones', 'fa-3x')
-                    Gameboard.player2.markers.push(condition);
                 }
-                evaluateScore(Gameboard.player2.markers)//possibly place evaluateScore() here
-            
             }
-            //////////////////////////////////////////////
+        };
+
+        if(target.className == 'markplacement' && target.childNodes.length == 0 && Gameboard.gamestart == true && Gameboard.gamewon == false){
+            let y = target.id
+            let divToAppend = document.querySelector(`#${y}`);
+            placement(); 
+            evaluateScore(Gameboard.player1.markers) 
+            evaluateScore(Gameboard.player2.markers)
             divToAppend.appendChild(newMarker)
-            
+            scoreUpdater()
         }
         if(target.id == 'reset'){
-            updateTitle.innerText = 'Player 1, Choose your side!'
-            let buttons = document.querySelectorAll('button')
-            let gridSquares = document.querySelectorAll('.markplacement')
-            buttons.forEach(button => button.disabled = false)
-            gridSquares.forEach((square) => square.innerHTML = '')
-            Gameboard.player1 = {}
-            Gameboard.player2 = {}
-            Gameboard.target = ''
-            Gameboard.turn = true
-            Gameboard.count = 0
-            Gameboard.gamestart =false
-            Gameboard.maxplays = 0
-            Gameboard.gamewon = false
-
+            reset()
         }
     });
-   
-    let useMarker; //lets placement of markers in gameLogic know which one to place-assigned by placement()
-    //placement() alternates turns for players, updates useMarker, checks Gameboard Object player objects for turn == true
-    let placement = () => {
-        let updateTitle = document.querySelector('#h2title')
-        if(Gameboard.player1.turn == true){
-            if(Gameboard.player1.avatar == 'ninja'){
-                useMarker = 'o';
-            } else if(Gameboard.player1.avatar == 'pirate'){
-                useMarker = 'x';
-            }
-            Gameboard.player1.turn = false;
-            Gameboard.player2.turn = true;
-        } else if(Gameboard.player2.turn == true){
-            if(Gameboard.player2.avatar == 'ninja'){
-                useMarker = 'o';
-            } else if(Gameboard.player2.avatar == 'pirate'){
-                useMarker = 'x';
-            }
-            Gameboard.player2.turn = false;
-            Gameboard.player1.turn = true;
-        }
-    };
+       
     const evaluateScore = (playerArr) => {
         
         let gameWinVals = Gameboard.wins.map(miniArr => miniArr) //to keep wins permanant through each iteration
@@ -145,8 +125,13 @@ const gameLogic = (() => {
         }
         findWin()
     };
-    
 
-
-    return {useMarker,}
+    const scoreUpdater = () => {
+        document.querySelector('#gamearea')
+        if(Gameboard.turn == false && Gameboard.gamewon == true){
+            updateTitle.innerText = 'Player 1 Wins!';
+        } else if(Gameboard.turn == true && Gameboard.gamewon == true){
+            updateTitle.innerText = 'Player 2 Wins!';
+        }
+    }
 })()
