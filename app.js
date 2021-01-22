@@ -2,8 +2,6 @@
 const factionPicker = document.querySelector('#titlearea').addEventListener('click', (e) => {
     let updateTitle = document.querySelector('#h2title')
     let target = e.target
-    console.log(e)
-    console.log(target)
     if(target.className == 'playerTeam' && Gameboard.count == 0){
         Gameboard.target = target.id;
         Gameboard.player1 = createPlayer(`${target.id}`,`${target.id}`,`${target.value}`, Gameboard.turn, [])
