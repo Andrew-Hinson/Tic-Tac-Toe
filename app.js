@@ -121,7 +121,13 @@ const gameLogic = (() => {
                 myFilter(playerArr, winConditions[i])
             }
         }
+        let determineTie = () => {
+            if (playerArr.length === 5 && Gameboard.gamewon == false){
+                updateTitle.innerText = 'Tie Game! Try Again!'
+            }
+        }
         findWin()
+        determineTie()
     };
 
     const scoreUpdater = () => {
